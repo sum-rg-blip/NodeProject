@@ -11,6 +11,32 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+
+
+   --primary-color: #000000;
+  --secondary-color: #666666;
+  --accent-color: #f3f4f6;
+  --bg-color: #ffffff;
+  --card-bg: #f9fafb;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --border-radius: 20px;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -53,6 +79,62 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+
+container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: var(--text-main);
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.btn-pill {
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.btn-secondary {
+  background: var(--accent-color);
+  color: var(--text-main);
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: var(--text-main);
+}
+
+.btn-outline:hover {
+  background: var(--accent-color);
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {
