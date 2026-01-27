@@ -9,6 +9,8 @@ import ProductsPage from './pages/ProductsPage.jsx';
 import Contact from './pages/Contact.jsx';
 import About from './pages/About.jsx';
 
+import Footer from './components/Footer'
+
 import './App.css';
 
 function App() {
@@ -66,7 +68,10 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
+    
+    
   );
 }
 

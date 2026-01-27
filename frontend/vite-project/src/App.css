@@ -121,7 +121,7 @@ button {
 }
 .nav-links{
   font-size: 1.1rem;    
-    
+
 }
 
 
@@ -640,5 +640,112 @@ button {
 
   .nav-links {
     display: none;
+  }
+}
+
+
+
+
+
+
+
+
+/* ================= FOOTER ================= */
+
+.footer {
+  background: #0f172a;
+  color: #e5e7eb;
+  margin-top: 6rem;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  padding: 4rem 0;
+}
+
+.footer-logo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #fff;
+}
+
+.footer-text {
+  margin: 1rem 0;
+  color: #9ca3af;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-col h4 {
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  color: #fff;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.footer-col a {
+  text-decoration: none;
+  color: #9ca3af;
+  transition: 0.3s;
+}
+
+.footer-col a:hover {
+  color: #fff;
+}
+
+.footer-col p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.footer-socials svg {
+  cursor: pointer;
+  color: #9ca3af;
+  transition: 0.3s;
+}
+
+.footer-socials svg:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  border-top: 1px solid #1f2933;
+  text-align: center;
+  padding: 1.2rem 0;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-container {
+    grid-template-columns: 1fr;
   }
 }
