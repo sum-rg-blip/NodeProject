@@ -28,8 +28,8 @@ body {
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1100px;
+  margin: 0 70px;
   padding: 0 1rem;
 }
 
@@ -109,6 +109,22 @@ button {
   border-bottom: 1px solid #f3f4f6;
   margin-bottom: 2rem;
 }
+.navbar{
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+
+
+}
+.nav-links{
+  font-size: 1.1rem;    
+    
+}
+
+
 
 .logo {
   font-size: 1.5rem;

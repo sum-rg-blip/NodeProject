@@ -1,12 +1,13 @@
 import React from 'react';
 import { Heart, ShoppingCart } from 'lucide-react';
 
-const ProductCard = ({ product, onOrder }) => (
-    <div className="product-card">
-        <button className="wishlist-btn"><Heart size={18} /></button>
-        <div className="product-image">
-            <img src={product.image} alt={product.brand} />
-        </div>
+function ProductCard({ product, onOrder }) {      
+    return (
+        <div className="product-card">
+            <button className="wishlist-btn"><Heart size={18} /></button>
+            <div className="product-image">
+                <img src={product.image} alt={product.brand} />
+            </div>
         <div className="product-info">
             <div className="brand-info">
                 <h3>{product.brand}</h3>
@@ -21,5 +22,5 @@ const ProductCard = ({ product, onOrder }) => (
         </div>
     </div>
 );
-
+}
 export default ProductCard;
