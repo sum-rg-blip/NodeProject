@@ -1,75 +1,136 @@
-import React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
-import { useAuth } from "./AuthContext";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-const CartContext = createContext();
+const CartContext = createContext(null);
 
-export const CartProvider = ({ children }) => {
-  const { user, setAuthOpen } = useAuth();
-
-  // ✅ Load from localStorage
+export function CartProvider({ children }) {
+  /* ---------------- CART ---------------- */
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem("cart");
     return saved ? JSON.parse(saved) : [];
   });
 
-  // ✅ Persist on change
+  /* ---------------- ORDERS ---------------- */
+  const [orders, setOrders] = useState(() => {
+    const saved = localStorage.getItem("orders");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  /* ---------------- PERSIST ---------------- */
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product) => {
-    if (!user) {
-      alert("Please login or register first");
-      setAuthOpen(true);
-      return false;
-    }
+  useEffect(() => {
+    localStorage.setItem("orders", JSON.stringify(orders));
+  }, [orders]);
 
+  /* ---------------- CART ACTIONS ---------------- */
+  const addToCart = (product) => {
     setCart((prev) => {
-      const found = prev.find((p) => p.id === product.id);
+      const found = prev.find((i) => i.id === product.id);
       if (found) {
-        return prev.map((p) =>
-          p.id === product.id ? { ...p, qty: p.qty + 1 } : p
+        return prev.map((i) =>
+          i.id === product.id ? { ...i, qty: i.qty + 1 } : i
         );
       }
       return [...prev, { ...product, qty: 1 }];
     });
-
     return true;
   };
 
   const inc = (id) =>
     setCart((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, qty: p.qty + 1 } : p))
+      prev.map((i) => (i.id === id ? { ...i, qty: i.qty + 1 } : i))
     );
 
   const dec = (id) =>
     setCart((prev) =>
-      prev
-        .map((p) => (p.id === id ? { ...p, qty: p.qty - 1 } : p))
-        .filter((p) => p.qty > 0)
+      prev.map((i) =>
+        i.id === id && i.qty > 1 ? { ...i, qty: i.qty - 1 } : i
+      )
     );
 
   const remove = (id) =>
-    setCart((prev) => prev.filter((p) => p.id !== id));
+    setCart((prev) => prev.filter((i) => i.id !== id));
 
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem("cart");
   };
 
-  const total = cart.reduce(
-    (sum, p) => sum + Number(p.price) * p.qty,
-    0
-  );
+  /* ---------------- TOTAL ---------------- */
+  const total = useMemo(() => {
+    return cart.reduce(
+      (sum, i) => sum + Number(i.price) * i.qty,
+      0
+    );
+  }, [cart]);
 
+  /* ---------------- CONFIRM ORDER ---------------- */
+  const confirmOrder = () => {
+    if (cart.length === 0) return;
+
+    const confirmed = cart.map((item) => ({
+      ...item,
+      orderId: Date.now() + item.id,
+      status: "CONFIRMED",
+      returnReason: "",
+    }));
+
+    setOrders((prev) => [...prev, ...confirmed]);
+    clearCart();
+  };
+
+  /* ---------------- RETURN ORDER ---------------- */
+  const returnOrder = (orderId, reason) => {
+    if (!reason || reason.trim() === "") {
+      alert("Return reason is required");
+      return false;
+    }
+
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.orderId === orderId
+          ? { ...o, status: "RETURNED", returnReason: reason }
+          : o
+      )
+    );
+
+    return true;
+  };
+
+  /* ---------------- PROVIDER ---------------- */
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, inc, dec, remove, clearCart, total }}
+      value={{
+        cart,
+        orders,
+        addToCart,
+        inc,
+        dec,
+        remove,
+        total,
+        confirmOrder,
+        returnOrder,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>
   );
-};
+}
 
-export const useCart = () => useContext(CartContext);
+/* ---------------- HOOK ---------------- */
+export function useCart() {
+  const ctx = useContext(CartContext);
+  if (!ctx) {
+    throw new Error("useCart must be used inside CartProvider");
+  }
+  return ctx;
+}

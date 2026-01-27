@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function Cart() {
+  const { user, setAuthOpen } = useAuth();
+  const { cart, inc, dec, remove, total, confirmOrder } = useCart();
   const navigate = useNavigate();
 
-  // ✅ get EVERYTHING from context
-  const { cart, inc, dec, remove, total } = useCart();
+  useEffect(() => {
+    if (!user) {
+      setAuthOpen(true);
+      navigate("/products");
+    }
+  }, [user]);
 
-  return (
+  if (!user) return null;
+
+   return (
     <div className="container section">
       <h2>Your Cart</h2>
 
@@ -18,30 +27,33 @@ export default function Cart() {
         <>
           <div className="orders-list">
             {cart.map((item) => (
-              <div className="order-item" key={item.id}>
-                
-                {/* LEFT SIDE */}
-                <div className="order-details">
-                  <strong>{item.brand}</strong>
-                  <p>${item.price}</p>
+              <div className="order-item" key={item.id} style={{ gap: "1rem" }}>
+                <div
+                  className="order-details"
+                  style={{ display: "flex", gap: "1rem", alignItems: "center" }}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.brand}
+                    style={{ width: 80, height: 80, objectFit: "contain" }}
+                  />
 
-                  <div className="qty-controls">
-                    <button onClick={() => dec(item.id)}>-</button>
-                    <span>{item.qty}</span>
-                    <button onClick={() => inc(item.id)}>+</button>
-                    <button
-                      className="btn-remove"
-                      onClick={() => remove(item.id)}
-                    >
-                      Remove
-                    </button>
+                  <div>
+                    <p><strong>{item.brand}</strong></p>
+                    <p>${item.price}</p>
+
+                    <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 8 }}>
+                      <button onClick={() => dec(item.id)}>-</button>
+                      <span style={{ fontWeight: 700 }}>{item.qty}</span>
+                      <button onClick={() => inc(item.id)}>+</button>
+                      <button onClick={() => remove(item.id)}>Remove</button>
+                    </div>
                   </div>
                 </div>
 
-                {/* RIGHT SIDE */}
-                <strong>
+                <p style={{ fontWeight: 800 }}>
                   ${(Number(item.price) * item.qty).toFixed(2)}
-                </strong>
+                </p>
               </div>
             ))}
           </div>
@@ -52,7 +64,11 @@ export default function Cart() {
 
           <button
             className="btn-pill btn-outline"
-            onClick={() => navigate("/checkout")}
+            style={{ marginTop: "1rem" }}
+            onClick={() => {
+              confirmOrder();
+              navigate("/checkout");
+            }}
           >
             Confirm Order
           </button>
@@ -61,3 +77,4 @@ export default function Cart() {
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -14,16 +14,21 @@ import Contact from "./pages/Contact";
 import About from "./pages/About";
 
 import { useCart } from "./context/CartContext";
+import { useAuth } from "./context/AuthContext";
 
 import "./App.css";
 
 export default function App() {
-  const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { user, setAuthOpen } = useAuth();
 
   const initiateOrder = (product) => {
-    const ok = addToCart(product);
-    if (ok) navigate("/cart");
+    if (!user) {
+      setAuthOpen(true); // 🔑 ask to login/register
+      return;
+    }
+
+    addToCart(product); // ✅ stay on page
   };
 
   return (
@@ -33,7 +38,6 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home onOrder={initiateOrder} />} />
-        <Route path="/home" element={<Home onOrder={initiateOrder} />} />
         <Route path="/products" element={<ProductsPage onOrder={initiateOrder} />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />

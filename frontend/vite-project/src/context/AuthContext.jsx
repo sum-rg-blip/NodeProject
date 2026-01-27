@@ -1,39 +1,52 @@
-import React, { createContext, useContext, useState } from "react";
-import API from "../services/api";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [authOpen, setAuthOpen] = useState(false);
 
-  const login = async ({ email, password }) => {
-    const res = await API.post("/auth/login", { email, password });
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-    setUser(res.data.user);
-    setAuthOpen(false);
-  };
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
 
-  const register = async ({ name, email, password }) => {
-    const res = await API.post("/auth/register", { name, email, password });
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-    setUser(res.data.user);
+  const login = (userData) => {
+    setUser(userData);
     setAuthOpen(false);
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, authOpen, setAuthOpen, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        authOpen,
+        setAuthOpen,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+/* ✅ THIS EXPORT WAS MISSING OR BROKEN BEFORE */
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used inside AuthProvider");
+  }
+  return context;
+};

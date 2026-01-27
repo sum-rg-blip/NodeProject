@@ -1,54 +1,102 @@
 import React, { useState } from "react";
-import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 export default function Checkout() {
   const { cart, total, clearCart } = useCart();
   const navigate = useNavigate();
-  const [reasons, setReasons] = useState({});
 
-  const submitOrder = () => {
-    for (const item of cart) {
-      if (reasons[item.id] === "") {
-        alert("Return reason required");
-        return;
-      }
+  // store return reasons per product
+  const [returnReasons, setReturnReasons] = useState({});
+  const [returned, setReturned] = useState({});
+
+  if (cart.length === 0) {
+    return (
+      <div className="container section text-center">
+        <h2>No confirmed orders</h2>
+      </div>
+    );
+  }
+
+  const handleReturn = (id) => {
+    if (!returnReasons[id] || returnReasons[id].trim() === "") {
+      alert("Please provide a reason to return this product.");
+      return;
     }
 
-    clearCart();
-    navigate("/thank-you");
+    setReturned((prev) => ({ ...prev, [id]: true }));
   };
 
   return (
     <div className="container section">
-      <h2>Checkout</h2>
+      <h2>Order Confirmed ✅</h2>
 
-      {cart.map((item) => (
-        <div key={item.id} className="checkout-item">
-          <img src={item.image} alt={item.brand} />
+      <div className="orders-list">
+        {cart.map((item) => (
+          <div className="order-item" key={item.id}>
+            {/* LEFT SIDE */}
+            <div className="order-details">
+              <img
+                src={item.image}
+                alt={item.brand}
+                style={{ width: 80, height: 80, objectFit: "contain" }}
+              />
 
-          <div className="checkout-info">
-            <h3>{item.brand}</h3>
-            <p>Product ID: {item.id}</p>
-            <p>${item.price}</p>
+              <div>
+                <p><strong>{item.brand}</strong></p>
+                <p>Qty: {item.qty}</p>
+                <p>${item.price}</p>
+              </div>
+            </div>
 
-            <button className="return-btn">Return</button>
-            <textarea
-              placeholder="Reason for return (required)"
-              value={reasons[item.id] || ""}
-              onChange={(e) =>
-                setReasons({ ...reasons, [item.id]: e.target.value })
-              }
-            />
+            {/* RIGHT SIDE */}
+            <div style={{ width: "40%" }}>
+              {returned[item.id] ? (
+                <p style={{ color: "green", fontWeight: "600" }}>
+                  Returned ✔
+                </p>
+              ) : (
+                <>
+                  <textarea
+                    placeholder="Reason to return"
+                    value={returnReasons[item.id] || ""}
+                    onChange={(e) =>
+                      setReturnReasons({
+                        ...returnReasons,
+                        [item.id]: e.target.value,
+                      })
+                    }
+                    style={{ width: "100%", minHeight: 70 }}
+                  />
+
+                  <button
+                    className="btn-pill btn-outline"
+                    style={{ marginTop: 10 }}
+                    onClick={() => handleReturn(item.id)}
+                  >
+                    Return
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
-      <h3>Total: ${total.toFixed(2)}</h3>
+      <h3 style={{ marginTop: "2rem" }}>
+        Total Paid: ${total.toFixed(2)}
+      </h3>
+    <button
+    className="btn-pill btn-outline"
+    style={{ marginTop: "2rem" }}
+    onClick={() => {
+        clearCart();
+        navigate("/products");
+    }}
+    >
+    Back to Products
+</button>
 
-      <button className="btn-confirm" onClick={submitOrder}>
-        Place Order
-      </button>
     </div>
   );
 }
