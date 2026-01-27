@@ -1,78 +1,48 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
-import Navbar from './components/Navbar.jsx';
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import AuthModal from "./components/AuthModal";
 
-import Home from './pages/Home.jsx';
-import Shop from './pages/Shop.jsx';
-import ProductsPage from './pages/ProductsPage.jsx';
-import Contact from './pages/Contact.jsx';
-import About from './pages/About.jsx';
+import Home from "./pages/Home";
+import ProductsPage from "./pages/ProductsPage";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import ThankYou from "./pages/ThankYou";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
 
-import Footer from './components/Footer'
+import { useCart } from "./context/CartContext";
 
-import './App.css';
+import "./App.css";
 
-function App() {
-  // user (later from backend)
-  const [user, setUser] = useState(null);
+export default function App() {
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
 
-  // cart
-  const [cart, setCart] = useState([]);
-
-  // auth modal (later)
-  const [showAuth, setShowAuth] = useState(false);
-
-  // ✅ THIS FUNCTION WAS MISSING — NOW IT EXISTS
   const initiateOrder = (product) => {
-    if (!user) {
-      alert('Please login or register first');
-      setShowAuth(true);
-      return;
-    }
-
-    setCart((prev) => {
-      const found = prev.find((item) => item.id === product.id);
-
-      if (found) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, qty: item.qty + 1 }
-            : item
-        );
-      }
-
-      return [...prev, { ...product, qty: 1 }];
-    });
+    const ok = addToCart(product);
+    if (ok) navigate("/cart");
   };
 
   return (
-    <BrowserRouter>
-      <Navbar user={user} cartCount={cart.length} />
+    <>
+      <Navbar />
+      <AuthModal />
 
       <Routes>
-        {/* HOME */}
         <Route path="/" element={<Home onOrder={initiateOrder} />} />
         <Route path="/home" element={<Home onOrder={initiateOrder} />} />
-
-        {/* PRODUCTS = FULL PRODUCT PAGE */}
-        <Route
-          path="/products"
-          element={<ProductsPage onOrder={initiateOrder} />}
-        />
-
-        {/* SHOP (optional separate page) */}
-        <Route path="/shop" element={<Shop onOrder={initiateOrder} />} />
-
-        {/* STATIC */}
+        <Route path="/products" element={<ProductsPage onOrder={initiateOrder} />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
       </Routes>
+
       <Footer />
-    </BrowserRouter>
-    
-    
+    </>
   );
 }
-
-export default App;
