@@ -9,7 +9,7 @@ const Navbar = ({ user, ordersCount, setShowOrders, setShowAuth, setIsLogin, log
 
       <div className="nav-links">
         <Link to="/home">Home</Link>
-<Link to="/products">Product</Link>
+         <Link to="/products">Product</Link>
         <Link to="/shop">Shop</Link>
         <Link to="/contact">Contact</Link>
         <Link to="/about">About Us</Link>

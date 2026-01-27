@@ -109,22 +109,40 @@ button {
   border-bottom: 1px solid #f3f4f6;
   margin-bottom: 2rem;
 }
-.navbar{
-  position: sticky;
+/* .navbar{
   top: 0;
-  background: #fff;
+  background-color: none;
   z-index: 10;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
 
 
+}  */
+  
+.navbar container{
+  margin: 0 20px;
+}
+.navbar container{
+  margin: 0 20px;
+  padding: 0 1rem ;
 }
 .nav-links{
-  font-size: 1.1rem;    
+  font-size: 1.1rem;  
+  margin: 0 60px; 
+  padding: 10px 20px; 
 
 }
 
+.nav-links a {
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+  transition: var(--transition);
+}
 
+.nav-links a:hover {
+  color: #000;
+}
 
 .logo {
   font-size: 1.5rem;
@@ -683,6 +701,10 @@ button {
   font-size: 1rem;
   margin-bottom: 1.2rem;
   color: #fff;
+}
+
+.footer-col{
+  margin-left: 80px;
 }
 
 .footer-col ul {

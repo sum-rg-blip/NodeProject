@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer-container container">
+    <footer className="footer  section">
+      <div className="footer-container ">
         {/* Brand */}
         <div className="footer-col">
           <h3 className="footer-logo">PHARMACY</h3>
