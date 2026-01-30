@@ -14,22 +14,32 @@ const Shop = ({ onOrder }) => {
     });
 
     return (
-        <div className="shop-page container">
-            <div className="shop-header">
-                <h1>Health Shop</h1>
-                <div className="shop-tools">
-                    <div className="search-bar">
+        <div className="container mx-auto py-10 px-4">
+            {/* HEADER */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <h1 className="text-3xl font-bold text-gray-900">Health Shop</h1>
+
+                <div className="flex flex-col md:flex-row gap-3 md:gap-4 w-full md:w-auto">
+                    {/* SEARCH BAR */}
+                    <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2 w-full md:w-auto">
                         <Search size={18} />
                         <input
                             type="text"
                             placeholder="Search products..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            className="bg-transparent outline-none w-full text-gray-900 placeholder-gray-500"
                         />
                     </div>
-                    <div className="filter-group">
+
+                    {/* FILTER */}
+                    <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2 w-full md:w-auto">
                         <Filter size={18} />
-                        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+                        <select
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                            className="bg-transparent outline-none text-gray-900"
+                        >
                             <option value="All">All Categories</option>
                             <option value="Healthcare">Healthcare</option>
                             <option value="Supplements">Supplements</option>
@@ -41,14 +51,16 @@ const Shop = ({ onOrder }) => {
                 </div>
             </div>
 
-            <div className="product-grid shop-grid">
+            {/* PRODUCTS GRID */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredProducts.map(product => (
                     <ProductCard key={product.id} product={product} onOrder={onOrder} />
                 ))}
             </div>
 
+            {/* NO RESULTS */}
             {filteredProducts.length === 0 && (
-                <div className="no-results">
+                <div className="mt-8 text-center text-gray-500">
                     <p>No products found matching your search.</p>
                 </div>
             )}
