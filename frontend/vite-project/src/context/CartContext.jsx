@@ -1,136 +1,80 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useAuth } from "./AuthContext";
 
 const CartContext = createContext(null);
+const API_BASE = "http://localhost:5000";
 
 export function CartProvider({ children }) {
-  /* ---------------- CART ---------------- */
+  const { token } = useAuth();
+
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem("cart");
     return saved ? JSON.parse(saved) : [];
   });
 
-  /* ---------------- ORDERS ---------------- */
-  const [orders, setOrders] = useState(() => {
-    const saved = localStorage.getItem("orders");
-    return saved ? JSON.parse(saved) : [];
-  });
+  useEffect(() => localStorage.setItem("cart", JSON.stringify(cart)), [cart]);
 
-  /* ---------------- PERSIST ---------------- */
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+  const total = useMemo(
+    () => cart.reduce((sum, i) => sum + Number(i.price) * i.qty, 0),
+    [cart]
+  );
 
-  useEffect(() => {
-    localStorage.setItem("orders", JSON.stringify(orders));
-  }, [orders]);
-
-  /* ---------------- CART ACTIONS ---------------- */
   const addToCart = (product) => {
     setCart((prev) => {
       const found = prev.find((i) => i.id === product.id);
-      if (found) {
-        return prev.map((i) =>
-          i.id === product.id ? { ...i, qty: i.qty + 1 } : i
-        );
-      }
+      if (found) return prev.map((i) => (i.id === product.id ? { ...i, qty: i.qty + 1 } : i));
       return [...prev, { ...product, qty: 1 }];
     });
-    return true;
   };
 
-  const inc = (id) =>
-    setCart((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, qty: i.qty + 1 } : i))
-    );
-
-  const dec = (id) =>
-    setCart((prev) =>
-      prev.map((i) =>
-        i.id === id && i.qty > 1 ? { ...i, qty: i.qty - 1 } : i
-      )
-    );
-
-  const remove = (id) =>
-    setCart((prev) => prev.filter((i) => i.id !== id));
+  const inc = (id) => setCart((prev) => prev.map((i) => (i.id === id ? { ...i, qty: i.qty + 1 } : i)));
+  const dec = (id) => setCart((prev) => prev.map((i) => (i.id === id && i.qty > 1 ? { ...i, qty: i.qty - 1 } : i)));
+  const remove = (id) => setCart((prev) => prev.filter((i) => i.id !== id));
 
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem("cart");
   };
 
-  /* ---------------- TOTAL ---------------- */
-  const total = useMemo(() => {
-    return cart.reduce(
-      (sum, i) => sum + Number(i.price) * i.qty,
-      0
-    );
-  }, [cart]);
+  const confirmOrder = async () => {
+    if (!token) throw new Error("No token. Please login again.");
+    if (cart.length === 0) throw new Error("Cart is empty");
 
-  /* ---------------- CONFIRM ORDER ---------------- */
-  const confirmOrder = () => {
-    if (cart.length === 0) return;
+    const payload = {
+      products: cart.map((item) => ({
+        name: item.brand,
+        price: Number(item.price),
+        image: item.image,
+        quantity: item.qty,
+      })),
+      totalAmount: Number(total.toFixed(2)),
+    };
 
-    const confirmed = cart.map((item) => ({
-      ...item,
-      orderId: Date.now() + item.id,
-      status: "CONFIRMED",
-      returnReason: "",
-    }));
+    const res = await fetch(`${API_BASE}/api/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": token, // ✅ matches your middleware
+      },
+      body: JSON.stringify(payload),
+    });
 
-    setOrders((prev) => [...prev, ...confirmed]);
+    const data = await res.json().catch(() => null);
+    if (!res.ok) throw new Error(data?.message || "Order failed");
+
     clearCart();
+    return data;
   };
 
-  /* ---------------- RETURN ORDER ---------------- */
-  const returnOrder = (orderId, reason) => {
-    if (!reason || reason.trim() === "") {
-      alert("Return reason is required");
-      return false;
-    }
-
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.orderId === orderId
-          ? { ...o, status: "RETURNED", returnReason: reason }
-          : o
-      )
-    );
-
-    return true;
-  };
-
-  /* ---------------- PROVIDER ---------------- */
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        orders,
-        addToCart,
-        inc,
-        dec,
-        remove,
-        total,
-        confirmOrder,
-        returnOrder,
-        clearCart,
-      }}
-    >
+    <CartContext.Provider value={{ cart, total, addToCart, inc, dec, remove, clearCart, confirmOrder }}>
       {children}
     </CartContext.Provider>
   );
 }
 
-/* ---------------- HOOK ---------------- */
 export function useCart() {
   const ctx = useContext(CartContext);
-  if (!ctx) {
-    throw new Error("useCart must be used inside CartProvider");
-  }
+  if (!ctx) throw new Error("useCart must be used inside CartProvider");
   return ctx;
 }

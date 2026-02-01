@@ -15,7 +15,7 @@ export default function Sidebar() {
   const menuItems = [
     { path: "/dashboard", icon: <AiOutlineHome size={24} />, label: "Dashboard" },
     { path: "/customer", icon: <AiOutlineUser size={24} />, label: "Patient" },
-    { path: "/order-details", icon: <HiOutlineClipboardList size={24} />, label: "Orders" },
+    // { path: "/order-details", icon: <HiOutlineClipboardList size={24} />, label: "Orders" },
     { path: "/message", icon: <AiOutlineMessage size={24} />, label: "Messages" },
     { path: "/", icon: <AiOutlineLogout size={24} />, label: "Logout", logout: true },
   ];

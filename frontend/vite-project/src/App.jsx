@@ -198,8 +198,8 @@ export default function App() {
         {/* Admin Pages */}
         <Route path="/loginAdmin" element={<PharmacLogin />} />
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/customer" element={<CustomerList />} />
-        <Route path="/order-details" element={<OrderDetails />} />
+         <Route path="/customer" element={<CustomerList />} />
+      <Route path="/order-details/:id" element={<OrderDetails />} /> {/* ✅ */}
         <Route path="/message" element={<Messages />} />
       </Routes>
 

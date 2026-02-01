@@ -1,8 +1,12 @@
 import express from "express";
-import { sendMessage } from "../controllers/contactController.js";
+import { sendMessage, getMessages, getMessageById } from "../controllers/contactController.js";
 
 const router = express.Router();
 
 router.post("/", sendMessage);
+
+// ✅ read messages
+router.get("/messages", getMessages);
+router.get("/messages/:id", getMessageById);
 
 export default router;

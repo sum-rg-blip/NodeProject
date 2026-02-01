@@ -8,45 +8,40 @@ export const AuthProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : null;
   });
 
+  const [token, setToken] = useState(() => localStorage.getItem("token") || "");
   const [authOpen, setAuthOpen] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
+    if (user) localStorage.setItem("user", JSON.stringify(user));
+    else localStorage.removeItem("user");
   }, [user]);
 
-  const login = (userData) => {
+  useEffect(() => {
+    if (token) localStorage.setItem("token", token);
+    else localStorage.removeItem("token");
+  }, [token]);
+
+  // ✅ IMPORTANT: accept (user, token)
+  const login = (userData, jwtToken) => {
     setUser(userData);
+    setToken(jwtToken || "");
     setAuthOpen(false);
   };
 
   const logout = () => {
     setUser(null);
+    setToken("");
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        authOpen,
-        setAuthOpen,
-      }}
-    >
+    <AuthContext.Provider value={{ user, token, login, logout, authOpen, setAuthOpen }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-/* ✅ THIS EXPORT WAS MISSING OR BROKEN BEFORE */
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
 };
