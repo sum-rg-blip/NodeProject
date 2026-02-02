@@ -49,7 +49,7 @@ const Contact = () => {
             <div className="w-[60px] h-[60px] rounded-full overflow-hidden mb-[30px] border-[3px] border-bg-lavender">
               <img src="/img/hero-doctor.png" alt="Mecura Pharmacist" className="w-full h-full object-cover" />
             </div>
-            <h1 className="text-[2.5rem] md:text-[2.8rem] leading-[0.95] mb-[20px] font-medium">Mecura<br />Pharmacy</h1>
+            <h1 className="text-[2.5rem] md:text-[2.8rem] leading-[0.95] mb-[20px] font-medium">Store <br />Pharmacy</h1>
             <p className="text-gray-text text-[0.95rem] leading-[1.6] mb-[30px]">Providing operational healthiness and clinically tested medical solutions for
               over 20 years. Your health is our priority.</p>
 
