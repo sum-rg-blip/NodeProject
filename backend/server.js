@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
+import cors from "cors"; // or: const cors = require("cors");
 import connectDB from "./config/db.js";
 
 import authRoutes from "./routes/authRoutes.js";
@@ -11,13 +11,12 @@ connectDB();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], // ✅ add PATCH
-    allowedHeaders: ["Content-Type", "x-auth-token"],
-  })
-);
+
+app.use(cors({
+  origin: "http://localhost:5174",
+  credentials: true,
+}));
+
 
 
 app.use(express.json());

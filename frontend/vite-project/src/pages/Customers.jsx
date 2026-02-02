@@ -9,7 +9,7 @@ const API_BASE = "http://localhost:5000";
 
 const CustomerList = () => {
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { token, user } = useAuth(); // ✅ get user role
 
   const [activeSection, setActiveSection] = useState("orders");
   const [rows, setRows] = useState([]);
@@ -48,9 +48,7 @@ const CustomerList = () => {
         const data = await res.json().catch(() => []);
         if (!res.ok) return;
         setRows((data || []).map(mapOrderToRow));
-      } catch (e) {
-        // ignore
-      }
+      } catch (e) {}
     };
     load();
   }, [token]);
@@ -76,7 +74,6 @@ const CustomerList = () => {
         method: "PATCH",
         headers: { "x-auth-token": token },
       });
-      
 
       const updated = await res.json().catch(() => null);
       if (!res.ok) throw new Error(updated?.message || "Confirm failed");
@@ -86,7 +83,13 @@ const CustomerList = () => {
       );
 
       setShowConfirm(false);
-      navigate(`/order-details/${selected.orderId}`);
+
+      // ✅ FINAL FIX: customer vs admin redirect
+      if (user?.role === "admin") {
+        navigate(`/order-details/${selected.orderId}`);
+      } else {
+        navigate("/products"); // 👈 CHANGE this if your products page route is different
+      }
     } catch (e) {
       alert(e.message || "Confirm failed");
     } finally {

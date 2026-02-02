@@ -1,5 +1,4 @@
 
-// controllers/orderController.js
 import Order from "../models/Order.js";
 
 // ✅ Create Order

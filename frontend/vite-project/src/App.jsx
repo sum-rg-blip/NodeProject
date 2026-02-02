@@ -2,12 +2,10 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
-// Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
 
-// Pages
 import Home from "./pages/Home";
 import ProductsPage from "./pages/ProductsPage";
 import Cart from "./pages/Cart";
@@ -21,10 +19,8 @@ import DashboardPage from "./pages/DashboardPage";
 import OrderDetails from "./pages/OrderDetails";
 import Messages from "./pages/Messages";
 
-// Context
 import { useCart } from "./context/CartContext";
 
-// Styles
 import "./index.css";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
@@ -32,7 +28,6 @@ export default function App() {
   const { addToCart } = useCart();
   const location = useLocation();
 
-  // Admin pages where navbar/footer should be hidden
   const adminPaths = [
     "/dashboard",
     "/customer",
@@ -40,7 +35,11 @@ export default function App() {
     "/message",
     "/loginAdmin",
   ];
-  const hideNavbar = adminPaths.includes(location.pathname);
+
+  // ✅ FIXED
+  const hideNavbar = adminPaths.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   const initiateOrder = (product) => {
     addToCart(product);
@@ -52,9 +51,8 @@ export default function App() {
       <AuthModal />
 
       <Routes>
-        {/* Public Pages */}
         <Route path="/" element={<Home onOrder={initiateOrder} />} />
-        <Route path="/home" element={<Home onOrder={initiateOrder} />} /> {/* ✅ FIX */}
+        <Route path="/home" element={<Home onOrder={initiateOrder} />} />
         <Route path="/products" element={<ProductsPage onOrder={initiateOrder} />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
@@ -62,7 +60,7 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
 
-        {/* Admin Pages */}
+        {/* Admin */}
         <Route path="/loginAdmin" element={<PharmacLogin />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/customer" element={<CustomerList />} />

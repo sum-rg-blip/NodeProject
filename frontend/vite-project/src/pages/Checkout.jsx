@@ -10,7 +10,9 @@ export default function Checkout() {
 
   const [returns, setReturns] = useState({});
   const [loading, setLoading] = useState(false);
+  const [thankYou, setThankYou] = useState(false);
 
+  // Prompt login if not authenticated
   useEffect(() => {
     if (!user || !token) setAuthOpen(true);
   }, [user, token, setAuthOpen]);
@@ -38,8 +40,11 @@ export default function Checkout() {
   const handleConfirm = async () => {
     try {
       setLoading(true);
-      const createdOrder = await confirmOrder();
-      navigate("/customer", { state: { newOrder: createdOrder } }); // ✅ correct path
+      await confirmOrder(); // ✅ Order goes to backend for admin
+      setThankYou(true); // show thank-you message
+      setTimeout(() => {
+        navigate("/products"); // ✅ Redirect customer to products page
+      }, 2000); // wait 2 sec so customer sees the thank-you
     } catch (e) {
       alert(e.message || "Order failed");
       if (String(e.message || "").toLowerCase().includes("token")) setAuthOpen(true);
@@ -103,6 +108,12 @@ export default function Checkout() {
         >
           {loading ? "Processing..." : "Confirm Order"}
         </button>
+
+        {thankYou && (
+          <p className="mt-4 text-green-600 font-semibold">
+            Thank you! Your order has been placed.
+          </p>
+        )}
       </div>
     </div>
   );
