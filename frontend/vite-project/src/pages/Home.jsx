@@ -17,7 +17,7 @@ function Home() {
       <section className="flex flex-col lg:flex-row items-center gap-8 bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-2xl p-10 shadow-xl">
         <div className="lg:w-1/2 space-y-6">
           <h1 className="text-5xl font-extrabold leading-tight">
-            Welcome to <span className="text-yellow-300"> Store Pharmacy</span>
+            Welcome to <span className="text-yellow-300"> StorePharmacy</span>
           </h1>
           <p className="text-lg max-w-md">
             Discover health essentials, trusted supplements, and personalized care — all in one place.
