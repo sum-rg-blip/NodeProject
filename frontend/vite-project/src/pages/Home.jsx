@@ -1,103 +1,134 @@
 import React from "react";
-
-const categories = [
-  { title: "Kidney Care", img: "https://via.placeholder.com/80" },
-  { title: "Kidney Care", img: "https://via.placeholder.com/80" },
-  { title: "Liver Care", img: "https://via.placeholder.com/80" },
-  { title: "Phytology Care", img: "https://via.placeholder.com/80" },
-  { title: "Sleek Care", img: "https://via.placeholder.com/80" },
-  { title: "Pregnant Care", img: "https://via.placeholder.com/80" },
-];
-
-const products = [
-  { name: "Fish Oil", price: "$56.00", img: "https://via.placeholder.com/120" },
-  { name: "Vitamin C", price: "$56.00", img: "https://via.placeholder.com/120" },
-  { name: "Herbal Mix", price: "$56.00", img: "https://via.placeholder.com/120" },
-  { name: "Health Plus", price: "$56.00", img: "https://via.placeholder.com/120" },
-  { name: "Daily Care", price: "$56.00", img: "https://via.placeholder.com/120" },
-];
+import { useNavigate } from "react-router-dom";
+import {
+  categories as homeCategories,
+  allProducts as homeProducts,
+  seasonalSolutions as homeSolutions,
+} from "../data/mockData";
 
 function Home() {
+  const navigate = useNavigate();
+  const featuredProducts = homeProducts.slice(0, 4);
+
   return (
-    <div className="py-6">
+    <div className="py-8 px-4 md:px-12 space-y-16">
 
       {/* Hero Section */}
-      <section className="flex flex-col md:flex-row items-center justify-between bg-gradient p-6 rounded-lg">
-        <div className="md:w-1/2">
-          <h1 className="text-5xl font-bold mb-3">
-            Pharmacy<span className="text-primary">*</span>
+      <section className="flex flex-col lg:flex-row items-center gap-8 bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-2xl p-10 shadow-xl">
+        <div className="lg:w-1/2 space-y-6">
+          <h1 className="text-5xl font-extrabold leading-tight">
+            Welcome to <span className="text-yellow-300">Pharmacy</span>
           </h1>
-          <p className="text-gray-600 mb-4">
-            Optimized dashboards, happier billing process, and managed solutions.
+          <p className="text-lg max-w-md">
+            Discover health essentials, trusted supplements, and personalized care — all in one place.
           </p>
-          <button className="btn btn-primary">Shop Now</button>
-
-          <div className="mt-4 p-4 bg-white rounded shadow w-40">
-            <p className="text-sm text-gray-500">Insights</p>
-            <p className="text-2xl font-bold">98.5%</p>
-            <p className="text-xs text-gray-400">Brian, 30 y/o (Male)</p>
-          </div>
+          <button
+            onClick={() => navigate("/products")}
+            className="bg-yellow-300 text-black font-bold px-7 py-2 rounded-lg hover:bg-yellow-400 transition"
+          >
+            Shop Now
+          </button>
         </div>
 
-        <div className="md:w-1/2 flex justify-center mt-6 md:mt-0">
+        <div className="lg:w-1/2 flex justify-center">
           <img
-            src="https://via.placeholder.com/300x300"
-            alt="Doctor"
-            className="rounded-lg"
+            src="https://static.vecteezy.com/system/resources/thumbnails/050/817/819/small/happy-smiling-male-doctor-with-hand-present-something-empty-space-standing-isolate-on-transparent-background-png.png"
+            alt=""
+            className="object-cover h-96"
           />
         </div>
       </section>
 
       {/* Categories */}
-      <section className="mt-10">
-        <h2 className="text-2xl font-semibold text-center mb-6">
+      <section className="max-w-7xl mx-auto px-4">
+        <h2 className="text-4xl font-semibold text-center mb-12">
           Our Popular Categories
         </h2>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          {categories.map((cat, i) => (
+        <div className="flex flex-wrap justify-center gap-6">
+          {homeCategories.map((cat) => (
             <div
-              key={i}
-              className="card w-40 text-center p-4 cursor-pointer"
+              key={cat.id}
+              className="flex flex-col items-center gap-4"
             >
-              <img
-                src={cat.img}
-                alt={cat.title}
-                className="mx-auto mb-2 rounded"
-              />
-              <p className="font-medium">{cat.title}</p>
+              <div className="w-24 h-24 rounded-2xl bg-gray-100 flex items-center justify-center hover:scale-105 transition">
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="w-full h-full object-cover mix-blend-multiply"
+                />
+              </div>
+              <p className="font-semibold text-sm">{cat.name}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Best Offers */}
-      <section className="mt-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold">
-            Today's Best Offer Just For You
-          </h2>
-          <button className="btn btn-link">See more →</button>
-        </div>
+      {/* Featured Products */}
+      <section className="max-w-7xl mx-auto px-4">
+        <h2 className="text-4xl font-semibold text-center mb-12">
+          Today’s Best Offers
+        </h2>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          {products.map((item, i) => (
-            <div key={i} className="card w-44 p-4 text-center">
-              <img
-                src={item.img}
-                alt={item.name}
-                className="mx-auto mb-3"
-              />
-              <p className="font-medium">{item.name}</p>
-              <p className="text-gray-500 mb-2">{item.price}</p>
-              <button className="btn btn-outline btn-sm">
-                Shop Now
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {featuredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col"
+            >
+              <div className="w-full h-60 overflow-hidden">
+                <img
+                  src={product.image}
+                  alt={product.brand}
+                  className="w-full h-full object-cover transform hover:scale-105 transition duration-300"
+                />
+              </div>
+              <div className="p-4 flex flex-col flex-1 justify-between">
+                <div>
+                  <p className="font-semibold text-lg">{product.brand}</p>
+                  <p className="text-gray-500 mb-4">{product.price}</p>
+                </div>
+                <button
+                  onClick={() => navigate("/products")}
+                  className="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-700 transition"
+                >
+                  Shop Now
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Seasonal Solutions */}
+      <section className="max-w-7xl mx-auto px-4 py-16 text-center">
+        <h2 className="text-4xl font-semibold mb-12">
+          Our Seasonal <br /> Exclusive Solutions
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {homeSolutions.map((solution) => (
+            <div
+              key={solution.id}
+              className="relative bg-pink-50 rounded-3xl p-8 min-h-[220px] overflow-hidden"
+            >
+              <h3 className="text-sm font-semibold mb-6">
+                {solution.title}
+              </h3>
+
+              <button className="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full text-sm font-medium border hover:bg-gray-100 transition">
+                See more <span className="text-gray-500">→</span>
               </button>
+
+              <img
+                src={solution.image}
+                alt={solution.title}
+                className="absolute bottom-0 right-0 w-1/3 object-cover"
+              />
             </div>
           ))}
         </div>
       </section>
-
     </div>
   );
 }
