@@ -73,7 +73,7 @@ export default function Messages() {
       {/* Main content */}
       <div className="flex-1 flex">
         {/* Chats List */}
-        <aside className="w-80 bg-white shadow-lg flex flex-col border-r">
+        <aside className="w-80 bg-slate-950 shadow-lg flex flex-col border-r">
           <div className="p-5 border-b flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-700">Messages</h2>
           </div>
@@ -120,7 +120,7 @@ export default function Messages() {
         </aside>
 
         {/* Chat Area */}
-        <main className="flex-1 flex flex-col bg-gray-50">
+        <main className="flex-1 flex flex-col bg-slate-800">
           {/* Header */}
           <header className="flex items-center justify-between px-5 py-3 bg-white shadow-sm border-b">
             <div className="flex items-center gap-3">

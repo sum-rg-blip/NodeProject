@@ -18,7 +18,7 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-// ✅ GET /api/contact/messages
+
 export const getMessages = async (req, res) => {
   try {
     const messages = await Message.find({})
@@ -31,7 +31,7 @@ export const getMessages = async (req, res) => {
   }
 };
 
-// ✅ GET /api/contact/messages/:id
+
 export const getMessageById = async (req, res) => {
   try {
     const msg = await Message.findById(req.params.id).select("name email message createdAt");

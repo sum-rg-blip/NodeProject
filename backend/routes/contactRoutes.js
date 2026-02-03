@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", sendMessage);
 
-// ✅ read messages
+
 router.get("/messages", getMessages);
 router.get("/messages/:id", getMessageById);
 

@@ -1,7 +1,7 @@
 
 import Order from "../models/Order.js";
 
-// ✅ Create Order
+
 export const createOrder = async (req, res) => {
   try {
     const order = await Order.create({
@@ -18,7 +18,7 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// ✅ Get Orders (for current user)
+
 export const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user })
@@ -31,13 +31,11 @@ export const getOrders = async (req, res) => {
   }
 };
 
-// ✅ Get Order By ID
+
 export const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate("user", "name email");
-    if (!order) return res.status(404).json({ message: "Order not found" });
-
-    // optional: restrict owner
+    if(!order)
     if (String(order.user?._id || order.user) !== String(req.user)) {
       return res.status(403).json({ message: "Not allowed" });
     }
@@ -48,7 +46,7 @@ export const getOrderById = async (req, res) => {
   }
 };
 
-// ✅ Return Order
+
 export const returnOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -70,18 +68,17 @@ export const returnOrder = async (req, res) => {
   }
 };
 
-// ✅ Confirm Order (ONLY ONCE)
+
+
 export const confirmOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate("user", "name email");
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    // optional: restrict owner
     if (String(order.user?._id || order.user) !== String(req.user)) {
       return res.status(403).json({ message: "Not allowed" });
     }
 
-    // 🚫 block repeat confirm
     if (order.status === "Confirmed") {
       return res.status(409).json({ message: "Order already confirmed" });
     }
@@ -101,7 +98,7 @@ export const deleteOrder = async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    // optional: only owner can delete
+    
     if (String(order.user) !== String(req.user)) {
       return res.status(403).json({ message: "Not allowed" });
     }

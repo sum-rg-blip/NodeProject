@@ -4,8 +4,12 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("user");
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem("user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
   });
 
   const [token, setToken] = useState(() => localStorage.getItem("token") || "");
@@ -21,9 +25,9 @@ export const AuthProvider = ({ children }) => {
     else localStorage.removeItem("token");
   }, [token]);
 
-  // ✅ IMPORTANT: accept (user, token)
+  // ✅ accept (user, token)
   const login = (userData, jwtToken) => {
-    setUser(userData);
+    setUser(userData || null);
     setToken(jwtToken || "");
     setAuthOpen(false);
   };
@@ -31,10 +35,13 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken("");
+    setAuthOpen(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, authOpen, setAuthOpen }}>
+    <AuthContext.Provider
+      value={{ user, token, login, logout, authOpen, setAuthOpen }}
+    >
       {children}
     </AuthContext.Provider>
   );

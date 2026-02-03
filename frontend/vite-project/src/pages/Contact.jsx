@@ -40,7 +40,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-lavender font-outfit flex items-center justify-center p-4 md:p-8">
+    <div className="min-h-screen bg-white font-outfit flex items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-[900px] relative">
 
         {/* Contact Card */}

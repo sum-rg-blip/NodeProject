@@ -2,24 +2,27 @@ import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import DashboardContent from "../components/DashboardContent";
 import CustomerList from "./Customers";
+import TopNavbar from "../components/TopNavbar";
 
 export default function DashboardPage() {
-  // State controlling which section to show
-  const [activeSection, setActiveSection] = useState("dashboard"); // default "dashboard"
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950">
       {/* Sidebar */}
-      <div className="w-24 bg-gray-800">
+      <div className="w-24">
         <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
       </div>
 
       {/* Main Content */}
       <div className="flex-1 p-6 overflow-auto">
-        {/* Dashboard Content (Books etc.) */}
+        {/* Top Navbar */}
+        <TopNavbar />
+
+        {/* Dashboard Content */}
         <DashboardContent activeSection={activeSection} />
 
-        {/* Show CustomerList only if "patients" icon clicked */}
+        {/* Customers */}
         {activeSection === "patients" && (
           <div className="mt-6">
             <CustomerList />

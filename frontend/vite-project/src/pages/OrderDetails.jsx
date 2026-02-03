@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../context/AuthContext";
@@ -21,9 +21,12 @@ export default function OrderDetails() {
       if (!token) return;
       try {
         setLoading(true);
+        setErr("");
+
         const res = await fetch(`${API_BASE}/api/orders/${id}`, {
           headers: { "x-auth-token": token },
         });
+
         const data = await res.json().catch(() => null);
         if (!res.ok) throw new Error(data?.message || "Failed to load order");
         setOrder(data);
@@ -33,23 +36,17 @@ export default function OrderDetails() {
         setLoading(false);
       }
     };
+
     load();
   }, [id, token]);
-
-  const rows = useMemo(() => {
-    const userName = order?.user?.name || "Unknown";
-    return (order?.products || []).map((p, idx) => ({
-      id: idx,
-      name: userName,
-      product: p?.name || "-",
-      amount: ((Number(p?.price || 0) * Number(p?.quantity || 0)) || 0).toFixed(2),
-    }));
-  }, [order]);
 
   return (
     <div className="flex">
       <div className="w-24 bg-gray-800 min-h-screen">
-        <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
+        <Sidebar
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+        />
       </div>
 
       <div className="flex-1 p-6">
@@ -64,9 +61,12 @@ export default function OrderDetails() {
             </button>
 
             <div>
-              <h1 className="text-2xl font-semibold text-gray-800">Order Details</h1>
+              <h1 className="text-2xl font-semibold text-gray-800">
+                Order Details
+              </h1>
               <p className="text-sm text-gray-500">
-                Status: <span className="font-semibold">{order?.status || "-"}</span>
+                Status:{" "}
+                <span className="font-semibold">{order?.status || "-"}</span>
               </p>
             </div>
           </div>
@@ -89,7 +89,9 @@ export default function OrderDetails() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                   <div className="text-gray-700">
                     <div className="font-semibold">{order.user?.name}</div>
-                    <div className="text-sm text-gray-500">{order.user?.email}</div>
+                    <div className="text-sm text-gray-500">
+                      {order.user?.email}
+                    </div>
                   </div>
 
                   <div className="text-sm text-gray-500">
@@ -105,12 +107,21 @@ export default function OrderDetails() {
                 <table className="w-full table-auto">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="p-4 text-left text-sm text-gray-500">Name</th>
-                      <th className="p-4 text-left text-sm text-gray-500">Product</th>
-                      <th className="p-4 text-left text-sm text-gray-500">Qty</th>
-                      <th className="p-4 text-left text-sm text-gray-500">Amount</th>
+                      <th className="p-4 text-left text-sm text-gray-500">
+                        Name
+                      </th>
+                      <th className="p-4 text-left text-sm text-gray-500">
+                        Product
+                      </th>
+                      <th className="p-4 text-left text-sm text-gray-500">
+                        Qty
+                      </th>
+                      <th className="p-4 text-left text-sm text-gray-500">
+                        Amount
+                      </th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {(order.products || []).map((p, idx) => {
                       const lineAmount =
@@ -122,7 +133,9 @@ export default function OrderDetails() {
                             {order.user?.name}
                           </td>
                           <td className="p-4 text-gray-700">{p?.name}</td>
-                          <td className="p-4 text-gray-700">{p?.quantity || 0}</td>
+                          <td className="p-4 text-gray-700">
+                            {p?.quantity || 0}
+                          </td>
                           <td className="p-4 font-semibold text-gray-800">
                             {lineAmount.toFixed(2)} USD
                           </td>

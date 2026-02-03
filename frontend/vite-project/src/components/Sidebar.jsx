@@ -15,7 +15,6 @@ export default function Sidebar() {
   const menuItems = [
     { path: "/dashboard", icon: <AiOutlineHome size={24} />, label: "Dashboard" },
     { path: "/customer", icon: <AiOutlineUser size={24} />, label: "Patient" },
-    // { path: "/order-details", icon: <HiOutlineClipboardList size={24} />, label: "Orders" },
     { path: "/message", icon: <AiOutlineMessage size={24} />, label: "Messages" },
     { path: "/", icon: <AiOutlineLogout size={24} />, label: "Logout", logout: true },
   ];
@@ -29,7 +28,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col items-center py-6 space-y-6 bg-gray-800 w-20">
+    <div className="flex flex-col items-center py-20 space-y-12  w-20">
       {menuItems.map((item) => (
         <button
           key={item.path}

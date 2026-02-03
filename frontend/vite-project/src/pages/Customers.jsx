@@ -9,7 +9,7 @@ const API_BASE = "http://localhost:5000";
 
 const CustomerList = () => {
   const navigate = useNavigate();
-  const { token, user } = useAuth(); // ✅ get user role
+  const { token } = useAuth();
 
   const [activeSection, setActiveSection] = useState("orders");
   const [rows, setRows] = useState([]);
@@ -78,18 +78,15 @@ const CustomerList = () => {
       const updated = await res.json().catch(() => null);
       if (!res.ok) throw new Error(updated?.message || "Confirm failed");
 
+      // update table status
       setRows((prev) =>
         prev.map((r) => (r.orderId === selected.orderId ? mapOrderToRow(updated) : r))
       );
 
       setShowConfirm(false);
 
-      // ✅ FINAL FIX: customer vs admin redirect
-      if (user?.role === "admin") {
-        navigate(`/order-details/${selected.orderId}`);
-      } else {
-        navigate("/products"); // 👈 CHANGE this if your products page route is different
-      }
+      // ✅ FIX: always go to order details page
+      navigate(`/order-details/${selected.orderId}`);
     } catch (e) {
       alert(e.message || "Confirm failed");
     } finally {
@@ -124,7 +121,7 @@ const CustomerList = () => {
         <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
       </div>
 
-      <div className="flex-1 p-6">
+      <div className="flex-1 bg-slate-950 p-6">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[600px] max-w-6xl mx-auto mt-8">
           <div className="overflow-x-auto">
             <table className="w-full border-b table-auto">
@@ -166,7 +163,9 @@ const CustomerList = () => {
                         <div className="text-sm text-gray-500 truncate">Qty: {p.quantity}</div>
                       </td>
 
-                      <td className="p-4 font-semibold text-gray-700 w-1/6 truncate">{p.amount}</td>
+                      <td className="p-4 font-semibold text-gray-700 w-1/6 truncate">
+                        {p.amount}
+                      </td>
 
                       <td className="p-4 w-1/6">
                         <span
@@ -229,10 +228,18 @@ const CustomerList = () => {
               <h2 className="text-lg font-semibold mb-4">Confirm Order</h2>
 
               <div className="space-y-2 text-sm text-gray-700">
-                <p><b>Name:</b> {modalInfo.name}</p>
-                <p><b>Treatment:</b> {modalInfo.treatment}</p>
-                <p><b>Quantity:</b> {modalInfo.quantity}</p>
-                <p><b>Amount:</b> {modalInfo.amount}</p>
+                <p>
+                  <b>Name:</b> {modalInfo.name}
+                </p>
+                <p>
+                  <b>Treatment:</b> {modalInfo.treatment}
+                </p>
+                <p>
+                  <b>Quantity:</b> {modalInfo.quantity}
+                </p>
+                <p>
+                  <b>Amount:</b> {modalInfo.amount}
+                </p>
               </div>
 
               <div className="flex justify-end gap-3 mt-6">
